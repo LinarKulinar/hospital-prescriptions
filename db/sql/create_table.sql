@@ -1,8 +1,8 @@
 CREATE TABLE PATIENT
 (
     patient_id   BIGINT IDENTITY PRIMARY KEY,
-    first_name   VARCHAR(40) DEFAULT NULL,
     last_name    VARCHAR(40) DEFAULT NULL,
+    first_name   VARCHAR(40) DEFAULT NULL,
     patronymic   VARCHAR(40) DEFAULT NULL,
     phone_number VARCHAR(40) DEFAULT NULL
 );
@@ -10,8 +10,8 @@ CREATE TABLE PATIENT
 CREATE TABLE DOCTOR
 (
     doctor_id      BIGINT IDENTITY PRIMARY KEY,
-    first_name     VARCHAR(40) DEFAULT NULL,
     last_name      VARCHAR(40) DEFAULT NULL,
+    first_name     VARCHAR(40) DEFAULT NULL,
     patronymic     VARCHAR(40) DEFAULT NULL,
     specialization VARCHAR(40) DEFAULT NULL
 );

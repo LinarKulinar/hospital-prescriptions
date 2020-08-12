@@ -5,22 +5,22 @@ package com.haulmont.testtask.model;
  */
 public class Doctor {
     private long doctorId;
-    private String firstName;
     private String lastName;
+    private String firstName;
     private String patronymic;
     private String specialization;
 
-    public Doctor(long doctorId, String firstName, String lastName, String patronymic, String specialization) {
+    public Doctor(long doctorId, String lastName, String firstName, String patronymic, String specialization) {
         this.doctorId = doctorId;
-        this.firstName = firstName;
         this.lastName = lastName;
+        this.firstName = firstName;
         this.patronymic = patronymic;
         this.specialization = specialization;
     }
 
-    public Doctor(String firstName, String lastName, String patronymic, String specialization) {
-        this.firstName = firstName;
+    public Doctor(String lastName, String firstName, String patronymic, String specialization) {
         this.lastName = lastName;
+        this.firstName = firstName;
         this.patronymic = patronymic;
         this.specialization = specialization;
     }
@@ -33,20 +33,20 @@ public class Doctor {
         this.doctorId = doctorId;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getPatronymic() {
@@ -68,8 +68,8 @@ public class Doctor {
     @Override
     public String toString() {
         return "id = " + doctorId +
-                ", name = " + firstName + " "
-                + lastName + " "
+                ", name = " + lastName + " "
+                + firstName + " "
                 + patronymic + "\t"
                 + specialization;
     }

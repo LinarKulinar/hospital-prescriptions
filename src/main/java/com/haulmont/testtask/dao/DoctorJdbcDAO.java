@@ -1,8 +1,6 @@
 package com.haulmont.testtask.dao;
 
 
-import com.haulmont.testtask.dbconnector.DataBaseFactory;
-import com.haulmont.testtask.dbconnector.DataBaseType;
 import com.haulmont.testtask.model.Doctor;
 
 import java.sql.Connection;
@@ -31,8 +29,8 @@ public class DoctorJdbcDAO implements DAO<Doctor> {
             while (rs.next()) {
                 doctorsList.add(new Doctor(
                         rs.getLong("doctor_id"),
-                        rs.getString("first_name"),
                         rs.getString("last_name"),
+                        rs.getString("first_name"),
                         rs.getString("patronymic"),
                         rs.getString("specialization")));
             }
@@ -49,8 +47,8 @@ public class DoctorJdbcDAO implements DAO<Doctor> {
             if (rs.next())
                 return new Doctor(
                         id,
-                        rs.getString("first_name"),
                         rs.getString("last_name"),
+                        rs.getString("first_name"),
                         rs.getString("patronymic"),
                         rs.getString("specialization"));
         } catch (SQLException e) {
@@ -62,10 +60,10 @@ public class DoctorJdbcDAO implements DAO<Doctor> {
     @Override
     public void insert(Doctor doctor) {
         try (Statement stm = connection.createStatement()) {
-            String query = "INSERT INTO DOCTOR (FIRST_NAME, LAST_NAME, PATRONYMIC, SPECIALIZATION) " +
+            String query = "INSERT INTO DOCTOR (LAST_NAME, FIRST_NAME, PATRONYMIC, SPECIALIZATION) " +
                     "VALUES ('" +
-                    doctor.getFirstName() + "','" +
                     doctor.getLastName() + "','" +
+                    doctor.getFirstName() + "','" +
                     doctor.getPatronymic() + "','" +
                     doctor.getSpecialization() + "');";
             System.out.println(query);
@@ -86,8 +84,8 @@ public class DoctorJdbcDAO implements DAO<Doctor> {
     public void update(Doctor doctor) {
         try (Statement stm = connection.createStatement()) {
             String query = "UPDATE DOCTOR SET " +
-                    "FIRST_NAME='" + doctor.getFirstName() +
-                    "', LAST_NAME ='" + doctor.getLastName() +
+                    "LAST_NAME='" + doctor.getLastName() +
+                    "', FIRST_NAME ='" + doctor.getFirstName() +
                     "', PATRONYMIC='" + doctor.getPatronymic() +
                     "', SPECIALIZATION ='" + doctor.getSpecialization() +
                     "'  WHERE DOCTOR_ID='" + doctor.getDoctorId() + "';";

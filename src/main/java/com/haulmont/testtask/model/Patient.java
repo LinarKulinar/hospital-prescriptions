@@ -1,26 +1,29 @@
 package com.haulmont.testtask.model;
 
+import java.io.Serializable;
+
 /**
  * Данный класс описывает сущность "Пациент"
  */
-public class Patient {
+@SuppressWarnings("serial")
+public class Patient implements Serializable, Cloneable {
     private long patientId;
-    private String firstName;
     private String lastName;
+    private String firstName;
     private String patronymic;
     private String phoneNumber;
 
-    public Patient(long patientId, String firstName, String lastName, String patronymic, String phoneNumber) {
+    public Patient(long patientId, String lastName, String firstName, String patronymic, String phoneNumber) {
         this.patientId = patientId;
-        this.firstName = firstName;
         this.lastName = lastName;
+        this.firstName = firstName;
         this.patronymic = patronymic;
         this.phoneNumber = phoneNumber;
     }
 
-    public Patient(String firstName, String lastName, String patronymic, String phoneNumber) {
-        this.firstName = firstName;
+    public Patient(String lastName, String firstName, String patronymic, String phoneNumber) {
         this.lastName = lastName;
+        this.firstName = firstName;
         this.patronymic = patronymic;
         this.phoneNumber = phoneNumber;
     }
@@ -34,20 +37,20 @@ public class Patient {
         this.patientId = patientId;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getPatronymic() {
@@ -69,8 +72,8 @@ public class Patient {
     @Override
     public String toString() {
         return "id = " + patientId +
-                ", name = " + firstName + " "
-                + lastName + " "
+                ", name = " + lastName + " "
+                + firstName + " "
                 + patronymic + "\t"
                 + phoneNumber;
     }

@@ -1,7 +1,5 @@
 package com.haulmont.testtask.dao;
 
-import com.haulmont.testtask.dbconnector.DataBaseFactory;
-import com.haulmont.testtask.dbconnector.DataBaseType;
 import com.haulmont.testtask.model.Patient;
 
 import java.sql.Connection;
@@ -28,10 +26,12 @@ public class PatientJdbcDAO implements DAO<Patient> {
         try (Statement stm = connection.createStatement();
              ResultSet rs = stm.executeQuery("select * from PATIENT")) {
             while (rs.next()) {
+                String sqlLastName = rs.getString("last_name");
+                String sqlFirstName = rs.getString("first_name");
                 patientsList.add(new Patient(
                         rs.getLong("patient_id"),
-                        rs.getString("first_name"),
                         rs.getString("last_name"),
+                        rs.getString("first_name"),
                         rs.getString("patronymic"),
                         rs.getString("phone_number")));
             }
@@ -48,8 +48,8 @@ public class PatientJdbcDAO implements DAO<Patient> {
             if (rs.next())
                 return new Patient(
                         id,
-                        rs.getString("first_name"),
                         rs.getString("last_name"),
+                        rs.getString("first_name"),
                         rs.getString("patronymic"),
                         rs.getString("phone_number"));
         } catch (SQLException e) {
@@ -61,10 +61,10 @@ public class PatientJdbcDAO implements DAO<Patient> {
     @Override
     public void insert(Patient patient) {
         try (final Statement stm = connection.createStatement()) {
-            String query = "INSERT INTO PATIENT (FIRST_NAME, LAST_NAME, PATRONYMIC, PHONE_NUMBER) " +
+            String query = "INSERT INTO PATIENT (LAST_NAME, FIRST_NAME, PATRONYMIC, PHONE_NUMBER) " +
                     "VALUES ('" +
-                    patient.getFirstName() + "','" +
                     patient.getLastName() + "','" +
+                    patient.getFirstName() + "','" +
                     patient.getPatronymic() + "','" +
                     patient.getPhoneNumber() + "');";
             System.out.println(query);
@@ -85,8 +85,8 @@ public class PatientJdbcDAO implements DAO<Patient> {
     public void update(Patient patient) {
         try (Statement stm = connection.createStatement()) {
             String query = "UPDATE PATIENT SET " +
-                    "FIRST_NAME='" + patient.getFirstName() +
-                    "', LAST_NAME ='" + patient.getLastName() +
+                    "LAST_NAME='" + patient.getLastName() +
+                    "', FIRST_NAME ='" + patient.getFirstName() +
                     "', PATRONYMIC='" + patient.getPatronymic() +
                     "', PHONE_NUMBER ='" + patient.getPhoneNumber() +
                     "'  WHERE PATIENT_ID='" + patient.getPatientId() + "';";
