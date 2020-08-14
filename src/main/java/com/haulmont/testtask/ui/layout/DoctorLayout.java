@@ -4,6 +4,7 @@ import com.haulmont.testtask.dao.DoctorJdbcDAO;
 import com.haulmont.testtask.dbconnector.DataBaseFactory;
 import com.haulmont.testtask.dbconnector.DataBaseType;
 import com.haulmont.testtask.model.Doctor;
+import com.haulmont.testtask.model.Prescription;
 import com.haulmont.testtask.ui.form.DoctorForm;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
@@ -19,6 +20,19 @@ public class DoctorLayout extends VerticalLayout {
     //Это ссылка на форму, которая выкидывается при редактировании/удалении
     private DoctorForm doctorForm = new DoctorForm(this);
 
+
+    /**
+     * инициализируем и возвращаем кнопку статистики для {@link Doctor}
+     */
+    private Button buildStatisticButton(Doctor d) {
+        Button button = new Button(VaadinIcons.BAR_CHART_H);
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
+        button.addClickListener(e -> {
+            doctorForm.setDoctor(d); // передаем в окно доктора, с которым будем работать
+            doctorForm.showForm();
+        });
+        return button;
+    }
 
     /**
      * инициализируем и возвращаем кнопку редактирования для {@link Doctor}
@@ -55,19 +69,12 @@ public class DoctorLayout extends VerticalLayout {
      * Обьект последнего столбца в Grid, тут пишется номер телефона, кнопки редактирования и удаления {@link Doctor}
      */
     private HorizontalLayout horizontalLayout(Doctor d) {
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.addComponent(new Label(d.getSpecialization())); // тут пишем специализацию Doctor
-
-        HorizontalLayout hlInner = new HorizontalLayout(); //тут поместим кнопки и сдвинем максиально вправо
-        hlInner.addComponent(buildEditButton(d)); // кнопка редактирования Doctor
-        hlInner.addComponent(buildDeleteButton(d)); // кнопка удаления Doctor
-
-        //добавляем hlInner в hl и делаем так, чтобы он был всегда максимально справа
-        hl.addComponent(hlInner);
-        hl.setComponentAlignment(hlInner, Alignment.MIDDLE_RIGHT);
-        hl.setExpandRatio(hlInner, 1.0f);
-        hl.setWidth("100%");
-
+        HorizontalLayout hl = new HorizontalLayout(); //тут поместим кнопки и сдвинем максиально вправо
+        hl.addComponent(buildStatisticButton(d));
+        hl.addComponent(buildEditButton(d)); // кнопка редактирования Prescription
+        hl.addComponent(buildDeleteButton(d)); // кнопка удаления Prescription
+        hl.setMargin(false);
+        hl.setWidthUndefined();
         return hl;
     }
 
@@ -76,11 +83,12 @@ public class DoctorLayout extends VerticalLayout {
      */
     public DoctorLayout() {
 
-        grid.setColumns("lastName", "firstName", "patronymic");
+        grid.setColumns("lastName", "firstName", "patronymic", "specialization");
         grid.getColumn("lastName").setCaption("Фамилия");
         grid.getColumn("firstName").setCaption("Имя").setSortable(false);
         grid.getColumn("patronymic").setCaption("Отчество").setSortable(false);
-        grid.addComponentColumn(this::horizontalLayout).setCaption("Специальность").setSortable(false);
+        grid.getColumn("specialization").setCaption("Специальность").setSortable(false);
+        grid.addComponentColumn(this::horizontalLayout).setCaption("").setSortable(false).setWidth(195);;
         grid.setSizeFull();
 
 

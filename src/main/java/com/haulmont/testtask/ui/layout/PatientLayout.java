@@ -19,7 +19,6 @@ public class PatientLayout extends VerticalLayout {
     //Это ссылка на форму, которая выкидывается при редактировании/удалении
     private PatientForm patientForm = new PatientForm(this);
 
-
     /**
      * инициализируем и возвращаем кнопку редактирования для {@link Patient}
      */
@@ -55,19 +54,11 @@ public class PatientLayout extends VerticalLayout {
      * Обьект последнего столбца в Grid, тут пишется номер телефона, кнопки редактирования и удаления {@link Patient}
      */
     private HorizontalLayout horizontalLayout(Patient p) {
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.addComponent(new Label(p.getPhoneNumber())); // тут пишем номер телефона Patient
-
-        HorizontalLayout hlInner = new HorizontalLayout(); //тут поместим кнопки и сдвинем максиально вправо
-        hlInner.addComponent(buildEditButton(p)); // кнопка редактирования Patient
-        hlInner.addComponent(buildDeleteButton(p)); // кнопка удаления Patient
-
-        //добавляем hlInner в hl и делаем так, чтобы он был всегда максимально справа
-        hl.addComponent(hlInner);
-        hl.setComponentAlignment(hlInner, Alignment.MIDDLE_RIGHT);
-        hl.setExpandRatio(hlInner, 1.0f);
-        hl.setWidth("100%");
-
+        HorizontalLayout hl = new HorizontalLayout(); //тут поместим кнопки и сдвинем максиально вправо
+        hl.addComponent(buildEditButton(p)); // кнопка редактирования Prescription
+        hl.addComponent(buildDeleteButton(p)); // кнопка удаления Prescription
+        hl.setMargin(false);
+        hl.setWidthUndefined();
         return hl;
     }
 
@@ -80,9 +71,9 @@ public class PatientLayout extends VerticalLayout {
         grid.getColumn("lastName").setCaption("Фамилия");
         grid.getColumn("firstName").setCaption("Имя").setSortable(false);
         grid.getColumn("patronymic").setCaption("Отчество").setSortable(false);
-        grid.addComponentColumn(this::horizontalLayout).setCaption("Телефон").setSortable(false);
+        grid.addColumn("phoneNumber").setCaption("Телефон");
+        grid.addComponentColumn(this::horizontalLayout).setSortable(false).setWidth(138);;
         grid.setSizeFull();
-
 
         addComponents(grid);
         updateList();
