@@ -1,0 +1,104 @@
+package com.haulmont.testtask.ui.layout;
+
+import com.haulmont.testtask.dao.PatientJdbcDAO;
+import com.haulmont.testtask.dbconnector.DataBaseFactory;
+import com.haulmont.testtask.dbconnector.DataBaseType;
+import com.haulmont.testtask.model.Patient;
+import com.haulmont.testtask.ui.form.PatientForm;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
+
+import java.util.List;
+
+
+public class PatientLayout extends VerticalLayout {
+    private DataBaseFactory hsqlDB = DataBaseFactory.getFactory(DataBaseType.HSQLDB);
+    private PatientJdbcDAO patientService = hsqlDB.getPatientDao();
+    private Grid<Patient> grid = new Grid<>(Patient.class);
+    //Это ссылка на форму, которая выкидывается при редактировании/удалении
+    private PatientForm patientForm = new PatientForm(this);
+
+
+    /**
+     * инициализируем и возвращаем кнопку редактирования для {@link Patient}
+     */
+    private Button buildEditButton(Patient p) {
+        Button button = new Button(VaadinIcons.PENCIL);
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
+        button.addClickListener(e -> {
+            patientForm.setPatient(p); // передаем в окно пациента, с которым будем работать
+            patientForm.showForm();
+        });
+        return button;
+    }
+
+    /**
+     * инициализируем и возвращаем кнопку удаления для {@link Patient}
+     */
+    private Button buildDeleteButton(Patient p) {
+        Button button = new Button(VaadinIcons.CLOSE);
+        button.setEnabled(p.isCanDelete()); // выключаем кнопку, если нельзя удалить этого пользователя
+        if (!p.isCanDelete())  // напишем информационное сообщение
+            button.setDescription("У пациента есть выписанные рецепты.\n" +
+                    "Для удаления пациента необходимо\n" +
+                    "удалить все выписанные ему рецепты из базы данных.");
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
+        button.addClickListener(e -> {
+            patientService.delete(p);
+            updateList();
+        });
+        return button;
+    }
+
+    /**
+     * Обьект последнего столбца в Grid, тут пишется номер телефона, кнопки редактирования и удаления {@link Patient}
+     */
+    private HorizontalLayout horizontalLayout(Patient p) {
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.addComponent(new Label(p.getPhoneNumber())); // тут пишем номер телефона Patient
+
+        HorizontalLayout hlInner = new HorizontalLayout(); //тут поместим кнопки и сдвинем максиально вправо
+        hlInner.addComponent(buildEditButton(p)); // кнопка редактирования Patient
+        hlInner.addComponent(buildDeleteButton(p)); // кнопка удаления Patient
+
+        //добавляем hlInner в hl и делаем так, чтобы он был всегда максимально справа
+        hl.addComponent(hlInner);
+        hl.setComponentAlignment(hlInner, Alignment.MIDDLE_RIGHT);
+        hl.setExpandRatio(hlInner, 1.0f);
+        hl.setWidth("100%");
+
+        return hl;
+    }
+
+    /**
+     * Элемент разметки, в котором отображается в {@link Grid} объекты {@link Patient}
+     */
+    public PatientLayout() {
+
+        grid.setColumns("lastName", "firstName", "patronymic");
+        grid.getColumn("lastName").setCaption("Фамилия");
+        grid.getColumn("firstName").setCaption("Имя").setSortable(false);
+        grid.getColumn("patronymic").setCaption("Отчество").setSortable(false);
+        grid.addComponentColumn(this::horizontalLayout).setCaption("Телефон").setSortable(false);
+        grid.setSizeFull();
+
+
+        addComponents(grid);
+        updateList();
+    }
+
+    /**
+     * Метод вызывается для повторной отрисовки пациентов в grid
+     */
+    public void updateList() {
+        List<Patient> patients = patientService.getAll();
+        grid.setItems(patients);
+    }
+
+    public void addPatient() {
+        patientForm.addPatient();
+        patientForm.showForm();
+    }
+
+}
