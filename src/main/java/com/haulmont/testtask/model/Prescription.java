@@ -1,5 +1,7 @@
 package com.haulmont.testtask.model;
 
+import com.haulmont.testtask.dao.PatientJdbcDAO;
+
 import java.sql.Date;
 
 /**
@@ -109,6 +111,11 @@ public class Prescription {
                 + "date creat = " + dateCreat + ", "
                 + "validity period = " + validityPeriod + ", "
                 + "priority = " + priority.toString();
+    }
+
+    public String getDescriptionAndValidityPeriod() {
+        return description + " " + validityPeriod;
+
     }
 
 }

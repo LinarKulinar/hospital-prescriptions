@@ -4,7 +4,6 @@ import com.haulmont.testtask.dao.DoctorJdbcDAO;
 import com.haulmont.testtask.dbconnector.DataBaseFactory;
 import com.haulmont.testtask.dbconnector.DataBaseType;
 import com.haulmont.testtask.model.Doctor;
-import com.haulmont.testtask.model.Prescription;
 import com.haulmont.testtask.ui.form.DoctorForm;
 import com.haulmont.testtask.ui.form.DoctorStatisticForm;
 import com.vaadin.icons.VaadinIcons;
@@ -91,7 +90,8 @@ public class DoctorLayout extends VerticalLayout {
         grid.getColumn("firstName").setCaption("Имя").setSortable(false);
         grid.getColumn("patronymic").setCaption("Отчество").setSortable(false);
         grid.getColumn("specialization").setCaption("Специальность").setSortable(false);
-        grid.addComponentColumn(this::horizontalLayout).setCaption("").setSortable(false).setWidth(195);;
+        grid.addComponentColumn(this::horizontalLayout).setCaption("").setSortable(false).setWidth(195);
+        ;
         grid.setSizeFull();
 
 

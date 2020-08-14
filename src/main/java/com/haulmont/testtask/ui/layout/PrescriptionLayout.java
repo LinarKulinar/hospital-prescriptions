@@ -8,6 +8,7 @@ import com.haulmont.testtask.dbconnector.DataBaseType;
 import com.haulmont.testtask.model.Prescription;
 import com.haulmont.testtask.ui.form.PrescriptionForm;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -20,6 +21,7 @@ public class PrescriptionLayout extends VerticalLayout {
     private PatientJdbcDAO patientService = hsqlDB.getPatientDao();
     private DoctorJdbcDAO doctorService = hsqlDB.getDoctorDao();
     private PrescriptionJdbcDAO prescriptionService = hsqlDB.getPrescriptionDao();
+    private TextField filterText = new TextField();
     private Grid<Prescription> grid = new Grid<>(Prescription.class);
     //Это ссылка на форму, которая выкидывается при редактировании/удалении
     private PrescriptionForm prescriptionForm = new PrescriptionForm(this);
@@ -89,21 +91,27 @@ public class PrescriptionLayout extends VerticalLayout {
      * Элемент разметки, в котором отображается в {@link Grid} объекты {@link Prescription}
      */
     public PrescriptionLayout() {
+        filterText.setPlaceholder("Поиск по ФИО пациента и описанию...");
+        filterText.setValueChangeMode(ValueChangeMode.EAGER);
+        filterText.addValueChangeListener(e -> updateList());
+        filterText.setHeight("40px");
+        filterText.setWidth("310px");
+        addComponent(filterText);
+        setExpandRatio(filterText, 1);
 
-        grid.setColumns("description"/*, "firstName", "patronymic"*/);
+        grid.setColumns("description");
         grid.getColumn("description").setCaption("Описание");
         grid.addComponentColumn(this::getFullNamePatient).setCaption("ФИО пациента");
         grid.addComponentColumn(this::getFullNameDoctor).setCaption("ФИО доктора");
-//        grid.addColumn("dateCreat").setCaption("Дата выдачи");
         grid.addComponentColumn(this::getRussianDateFormat).setCaption("Дата выдачи");
         grid.addColumn("validityPeriod").setCaption("Срок действия");
         grid.addColumn("priority").setCaption("Приоритет");
         grid.addComponentColumn(this::horizontalLayout).setSortable(false).setWidth(138);
 //        grid.setFrozenColumnCount(6);
         grid.setSizeFull();
-
-
         addComponents(grid);
+        setExpandRatio(grid, 19);
+
         updateList();
     }
 
@@ -111,7 +119,7 @@ public class PrescriptionLayout extends VerticalLayout {
      * Метод вызывается для повторной отрисовки пациентов в grid
      */
     public void updateList() {
-        List<Prescription> prescriptions = prescriptionService.getAll();
+        List<Prescription> prescriptions = prescriptionService.getAll(filterText.getValue());
         grid.setItems(prescriptions);
     }
 

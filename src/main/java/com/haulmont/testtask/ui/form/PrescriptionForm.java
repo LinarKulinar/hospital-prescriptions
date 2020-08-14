@@ -140,7 +140,7 @@ public class PrescriptionForm extends FormLayout {
         binder.forField(decriptionField)
                 .withValidator(new RegexpValidator(
                         "Введите название лекарства. Оно должно начинаться с заглавной буквы",
-                        "([А-Я]{1})([а-я]*)"))
+                        "([А-Я]{1})([а-я ]*)"))
                 .bind(Prescription::getDescription, Prescription::setDescription);
         binder.forField(patientComboBox)
                 .withValidator(patient -> patient != null, "Please choose the patient.")
@@ -149,7 +149,7 @@ public class PrescriptionForm extends FormLayout {
                 .withValidator(doctor -> doctor != null, "Please choose the doctor.")
                 .bind(this::getDoctorForBind, this::setDoctorForBind);
         binder.forField(dateCreatField)
-                .withValidator(localDate -> localDate.compareTo(LocalDate.now())<=0,
+                .withValidator(localDate -> localDate.compareTo(LocalDate.now()) <= 0,
                         "Please enter date not later than today")
                 .bind(this::getDateCreat, this::setDateCreat);
         binder.forField(validityPeriodField)

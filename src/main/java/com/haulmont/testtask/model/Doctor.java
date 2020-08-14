@@ -84,10 +84,4 @@ public class Doctor {
     public boolean isCanDelete() {
         return isCanDelete;
     }
-
-//    public String getfullName() {
-//        return lastName + " "
-//                + firstName + " "
-//                + patronymic;
-//    }
 }

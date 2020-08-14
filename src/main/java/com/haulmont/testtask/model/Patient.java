@@ -85,12 +85,6 @@ public class Patient implements Serializable, Cloneable {
                 + patronymic;
     }
 
-//    public String getfullName() {
-//        return lastName + " "
-//                + firstName + " "
-//                + patronymic;
-//    }
-
     public boolean isCanDelete() {
         return isCanDelete;
     }

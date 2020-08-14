@@ -21,20 +21,48 @@ public class PrescriptionJdbcDAO implements DAO<Prescription> {
         this.connection = connection;
     }
 
+    /**
+     * Возвращаем строку, в которой указаны через пробел описание рецепта, ФИО пациента и приоритет рецепта
+     */
+    private String getSearchKeyWord(Prescription prescription) {
+        String descriptionAndValidityPeriod = prescription.getDescriptionAndValidityPeriod();
+
+        PatientJdbcDAO patientService = new PatientJdbcDAO(connection);
+        String fullNamePatient = patientService.getById(prescription.getPatientId()).toString();
+
+        return descriptionAndValidityPeriod + " " + fullNamePatient + " " + prescription.getPriority().toString();
+    }
+
     @Override
     public ArrayList<Prescription> getAll() {
+        return getAll("");
+    }
+
+    /**
+     * Перегрузили метод getAll()
+     *
+     * @param stringFilter - строка поиска
+     */
+    public ArrayList<Prescription> getAll(String stringFilter) {
         ArrayList<Prescription> prescriptionList = new ArrayList<>();
         try (Statement stm = connection.createStatement();
              ResultSet rs = stm.executeQuery("select * from PRESCRIPTION")) {
             while (rs.next()) {
-                prescriptionList.add(new Prescription(
+                Prescription prescription = new Prescription(
                         rs.getLong("prescription_id"),
                         rs.getString("description"),
                         rs.getLong("patient_id"),
                         rs.getLong("doctor_id"),
                         rs.getDate("date_creat"),
                         rs.getLong("validity_period"),
-                        PrescriptionPriorityType.valueOf(rs.getString("priority"))));
+                        PrescriptionPriorityType.valueOf(rs.getString("priority")));
+
+                boolean passesFilter = (stringFilter == null || stringFilter.isEmpty())
+                        || getSearchKeyWord(prescription).toLowerCase().contains(stringFilter.toLowerCase());
+                if (passesFilter) {
+                    prescriptionList.add(prescription);
+                }
+
             }
         } catch (SQLException e) {
             e.printStackTrace();

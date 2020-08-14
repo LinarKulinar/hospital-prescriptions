@@ -1,6 +1,5 @@
 package com.haulmont.testtask.ui;
 
-import com.haulmont.testtask.model.Prescription;
 import com.haulmont.testtask.ui.layout.DoctorLayout;
 import com.haulmont.testtask.ui.layout.PatientLayout;
 import com.haulmont.testtask.ui.layout.PrescriptionLayout;
@@ -21,6 +20,19 @@ public class MainUI extends UI {
     private Window windowWrappingAddButtonDoctor;
     private Window windowWrappingAddButtonPrescription;
 
+    /**
+     * В данном методе перерисовывается положение windowWrappingAddButton
+     */
+    private void refreshWindowWrappingAddButtonPosition(Window windowWrappingAddButton) {
+        // Set window position
+        int screenWidth = UI.getCurrent().getPage().getCurrent().getBrowserWindowWidth();
+        int screenHeight = UI.getCurrent().getPage().getCurrent().getBrowserWindowHeight();
+        int percentX = (int) (0.82 * screenWidth);
+        int percentY = (int) (0.85 * screenHeight);
+        windowWrappingAddButton.setPositionX(percentX);
+        windowWrappingAddButton.setPositionY(percentY);
+    }
+
     private Window getWindowWrappingAddButton(Button.ClickListener listener) {
         // Create a new sub-window with add button
         Window windowWrappingAddButton = new Window("");
@@ -30,13 +42,8 @@ public class MainUI extends UI {
         windowWrappingAddButton.setClosable(false);
         windowWrappingAddButton.setResizable(false);
         windowWrappingAddButton.setDraggable(false);
-        // Set window position
-        int screenWidth = UI.getCurrent().getPage().getCurrent().getBrowserWindowWidth();
-        int screenHeight = UI.getCurrent().getPage().getCurrent().getBrowserWindowHeight();
-        int percentX = (int) (0.82 * screenWidth);
-        int percentY = (int) (0.85 * screenHeight);
-        windowWrappingAddButton.setPositionX(percentX);
-        windowWrappingAddButton.setPositionY(percentY);
+
+        refreshWindowWrappingAddButtonPosition(windowWrappingAddButton);
         //add button on sub-window
         Button addBtn = new Button(VaadinIcons.PLUS);
         addBtn.addClickListener(listener);
@@ -55,21 +62,25 @@ public class MainUI extends UI {
             windowWrappingAddButtonDoctor.setVisible(false);
             windowWrappingAddButtonPrescription.setVisible(false);
             windowWrappingAddButtonPatient.setVisible(true);
+            patientLayout.updateList();  //обновляем вкладку при переключении
         }
         if (tabs.getSelectedTab() instanceof DoctorLayout) {
             windowWrappingAddButtonPatient.setVisible(false);
             windowWrappingAddButtonPrescription.setVisible(false);
             windowWrappingAddButtonDoctor.setVisible(true);
+            doctorLayout.updateList();  //обновляем вкладку при переключении
         }
         if (tabs.getSelectedTab() instanceof PrescriptionLayout) {
             windowWrappingAddButtonPatient.setVisible(false);
             windowWrappingAddButtonDoctor.setVisible(false);
             windowWrappingAddButtonPrescription.setVisible(true);
+            prescriptionLayout.updateList();  //обновляем вкладку при переключении
         }
     }
 
     @Override
     protected void init(VaadinRequest request) {
+        MainUI.getCurrent().setIcon(VaadinIcons.VAADIN_H);
         //инициализируем Tabsheet
         patientLayout.setSizeFull();
         tabs.addTab(patientLayout, "Пациенты");
@@ -96,7 +107,10 @@ public class MainUI extends UI {
         setRightAddButton(); // отображаем в начальный момент кнопку
         tabs.addSelectedTabChangeListener(e -> setRightAddButton());
 
+        MainUI.getCurrent().getPage().addBrowserWindowResizeListener(e -> { // слушатель на изменение размера окна
+            refreshWindowWrappingAddButtonPosition(windowWrappingAddButtonPatient);
+            refreshWindowWrappingAddButtonPosition(windowWrappingAddButtonDoctor);
+            refreshWindowWrappingAddButtonPosition(windowWrappingAddButtonPrescription);
+        });
     }
-
-
 }

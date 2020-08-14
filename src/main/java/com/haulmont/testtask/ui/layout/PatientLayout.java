@@ -72,7 +72,8 @@ public class PatientLayout extends VerticalLayout {
         grid.getColumn("firstName").setCaption("Имя").setSortable(false);
         grid.getColumn("patronymic").setCaption("Отчество").setSortable(false);
         grid.addColumn("phoneNumber").setCaption("Телефон");
-        grid.addComponentColumn(this::horizontalLayout).setSortable(false).setWidth(138);;
+        grid.addComponentColumn(this::horizontalLayout).setSortable(false).setWidth(138);
+        ;
         grid.setSizeFull();
 
         addComponents(grid);

@@ -36,7 +36,7 @@ public class DoctorStatisticForm extends FormLayout {
         setSizeUndefined();
         addComponent(info);
         setMargin(true);
-        
+
 
     }
 
