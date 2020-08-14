@@ -25,14 +25,25 @@ public class DoctorJdbcDAO implements DAO<Doctor> {
     public ArrayList<Doctor> getAll() {
         ArrayList<Doctor> doctorsList = new ArrayList<>();
         try (Statement stm = connection.createStatement();
-             ResultSet rs = stm.executeQuery("select * from DOCTOR")) {
+             ResultSet rs = stm.executeQuery("" +
+                     "SELECT DOCTOR_ID,\n" +
+                     "       LAST_NAME,\n" +
+                     "       FIRST_NAME,\n" +
+                     "       PATRONYMIC,\n" +
+                     "       SPECIALIZATION,\n" +
+                     "       DOCTOR_ID not in (\n" +
+                     "           SELECT DISTINCT DOCTOR_ID\n" +
+                     "           from PRESCRIPTION)\n" +
+                     "from DOCTOR")) {
             while (rs.next()) {
                 doctorsList.add(new Doctor(
                         rs.getLong("doctor_id"),
                         rs.getString("last_name"),
                         rs.getString("first_name"),
                         rs.getString("patronymic"),
-                        rs.getString("specialization")));
+                        rs.getString("specialization"),
+                        rs.getBoolean(6)));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,14 +54,24 @@ public class DoctorJdbcDAO implements DAO<Doctor> {
     @Override
     public Doctor getById(long id) {
         try (Statement stm = connection.createStatement();
-             ResultSet rs = stm.executeQuery("select * from DOCTOR where DOCTOR_ID=" + id)) {
+             ResultSet rs = stm.executeQuery("" +
+                     "SELECT DOCTOR_ID,\n" +
+                     "       LAST_NAME,\n" +
+                     "       FIRST_NAME,\n" +
+                     "       PATRONYMIC,\n" +
+                     "       SPECIALIZATION,\n" +
+                     "       DOCTOR_ID not in (\n" +
+                     "           SELECT DISTINCT DOCTOR_ID\n" +
+                     "           from PRESCRIPTION)\n" +
+                     "from DOCTOR where DOCTOR_ID=" + id)) {
             if (rs.next())
                 return new Doctor(
                         id,
                         rs.getString("last_name"),
                         rs.getString("first_name"),
                         rs.getString("patronymic"),
-                        rs.getString("specialization"));
+                        rs.getString("specialization"),
+                        rs.getBoolean(6));
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -20,20 +20,51 @@ public class PatientJdbcDAO implements DAO<Patient> {
         this.connection = connection;
     }
 
+//    @Override
+////    public ArrayList<Patient> getAll() {
+////        ArrayList<Patient> patientsList = new ArrayList<>();
+////        try (Statement stm = connection.createStatement();
+////             ResultSet rs = stm.executeQuery("select * from PATIENT")) {
+////            while (rs.next()) {
+////                String sqlLastName = rs.getString("last_name");
+////                String sqlFirstName = rs.getString("first_name");
+////                patientsList.add(new Patient(
+////                        rs.getLong("patient_id"),
+////                        rs.getString("last_name"),
+////                        rs.getString("first_name"),
+////                        rs.getString("patronymic"),
+////                        rs.getString("phone_number")));
+////            }
+////        } catch (SQLException e) {
+////            e.printStackTrace();
+////        }
+////        return patientsList;
+////    }
+
+
     @Override
     public ArrayList<Patient> getAll() {
         ArrayList<Patient> patientsList = new ArrayList<>();
         try (Statement stm = connection.createStatement();
-             ResultSet rs = stm.executeQuery("select * from PATIENT")) {
+             ResultSet rs = stm.executeQuery(
+                     "SELECT PATIENT_ID,\n" +
+                             "       LAST_NAME,\n" +
+                             "       FIRST_NAME,\n" +
+                             "       PATRONYMIC,\n" +
+                             "       PHONE_NUMBER,\n" +
+                             "       PATIENT_ID not in (\n" +
+                             "           SELECT DISTINCT PATIENT_ID\n" +
+                             "           from PRESCRIPTION)\n" +
+                             "from PATIENT")) {
             while (rs.next()) {
-                String sqlLastName = rs.getString("last_name");
-                String sqlFirstName = rs.getString("first_name");
                 patientsList.add(new Patient(
                         rs.getLong("patient_id"),
                         rs.getString("last_name"),
                         rs.getString("first_name"),
                         rs.getString("patronymic"),
-                        rs.getString("phone_number")));
+                        rs.getString("phone_number"),
+                        rs.getBoolean(6)
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,14 +75,24 @@ public class PatientJdbcDAO implements DAO<Patient> {
     @Override
     public Patient getById(long id) {
         try (Statement stm = connection.createStatement();
-             ResultSet rs = stm.executeQuery("select * from PATIENT where PATIENT_ID=" + id)) {
+             ResultSet rs = stm.executeQuery("" +
+                     "SELECT PATIENT_ID,\n" +
+                     "       LAST_NAME,\n" +
+                     "       FIRST_NAME,\n" +
+                     "       PATRONYMIC,\n" +
+                     "       PHONE_NUMBER,\n" +
+                     "       PATIENT_ID not in (\n" +
+                     "           SELECT DISTINCT PATIENT_ID\n" +
+                     "           from PRESCRIPTION)\n" +
+                     "from PATIENT where PATIENT_ID=" + id)) {
             if (rs.next())
                 return new Patient(
                         id,
                         rs.getString("last_name"),
                         rs.getString("first_name"),
                         rs.getString("patronymic"),
-                        rs.getString("phone_number"));
+                        rs.getString("phone_number"),
+                        rs.getBoolean(6));
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -7,18 +7,27 @@ import java.io.Serializable;
  */
 @SuppressWarnings("serial")
 public class Patient implements Serializable, Cloneable {
+    public final static Patient SAMPLE_PATIENT = new Patient(
+            "Иванов",
+            "Иван",
+            "Иванович",
+            "+7(999)999-99-99");
+
     private long patientId;
     private String lastName;
     private String firstName;
     private String patronymic;
     private String phoneNumber;
+    private boolean isCanDelete = true; //true, если нет строчек таблице в Prescription
 
-    public Patient(long patientId, String lastName, String firstName, String patronymic, String phoneNumber) {
+
+    public Patient(long patientId, String lastName, String firstName, String patronymic, String phoneNumber, boolean isCanDelete) {
         this.patientId = patientId;
         this.lastName = lastName;
         this.firstName = firstName;
         this.patronymic = patronymic;
         this.phoneNumber = phoneNumber;
+        this.isCanDelete = isCanDelete;
     }
 
     public Patient(String lastName, String firstName, String patronymic, String phoneNumber) {
@@ -76,5 +85,9 @@ public class Patient implements Serializable, Cloneable {
                 + firstName + " "
                 + patronymic + "\t"
                 + phoneNumber;
+    }
+
+    public boolean isCanDelete() {
+        return isCanDelete;
     }
 }
