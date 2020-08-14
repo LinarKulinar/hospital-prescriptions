@@ -1,7 +1,9 @@
 package com.haulmont.testtask.ui;
 
+import com.haulmont.testtask.model.Prescription;
 import com.haulmont.testtask.ui.layout.DoctorLayout;
 import com.haulmont.testtask.ui.layout.PatientLayout;
+import com.haulmont.testtask.ui.layout.PrescriptionLayout;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
@@ -14,8 +16,10 @@ public class MainUI extends UI {
     private final TabSheet tabs = new TabSheet();
     private final DoctorLayout doctorLayout = new DoctorLayout();
     private final PatientLayout patientLayout = new PatientLayout();
+    private final PrescriptionLayout prescriptionLayout = new PrescriptionLayout();
     private Window windowWrappingAddButtonPatient;
     private Window windowWrappingAddButtonDoctor;
+    private Window windowWrappingAddButtonPrescription;
 
     private Window getWindowWrappingAddButton(Button.ClickListener listener) {
         // Create a new sub-window with add button
@@ -42,14 +46,25 @@ public class MainUI extends UI {
         return windowWrappingAddButton;
     }
 
-    private void setRightActionOnAddButton() {
+    /**
+     * В данном методе мы скрываем кнопки addBtn, которые подвязаны на нетекущий layout в tabs
+     * и отображам только ту кнопку, которая соответствует текущему layout в tabs
+     */
+    private void setRightAddButton() {
         if (tabs.getSelectedTab() instanceof PatientLayout) {
             windowWrappingAddButtonDoctor.setVisible(false);
+            windowWrappingAddButtonPrescription.setVisible(false);
             windowWrappingAddButtonPatient.setVisible(true);
         }
         if (tabs.getSelectedTab() instanceof DoctorLayout) {
             windowWrappingAddButtonPatient.setVisible(false);
+            windowWrappingAddButtonPrescription.setVisible(false);
             windowWrappingAddButtonDoctor.setVisible(true);
+        }
+        if (tabs.getSelectedTab() instanceof PrescriptionLayout) {
+            windowWrappingAddButtonPatient.setVisible(false);
+            windowWrappingAddButtonDoctor.setVisible(false);
+            windowWrappingAddButtonPrescription.setVisible(true);
         }
     }
 
@@ -60,6 +75,10 @@ public class MainUI extends UI {
         tabs.addTab(patientLayout, "Пациенты");
         doctorLayout.setSizeFull();
         tabs.addTab(doctorLayout, "Врачи");
+        doctorLayout.setSizeFull();
+        tabs.addTab(prescriptionLayout, "Рецепты");
+        prescriptionLayout.setSizeFull();
+
         tabs.setSizeFull();
         tabs.setStyleName(ValoTheme.BUTTON_PRIMARY);
         this.setSizeFull();
@@ -71,8 +90,11 @@ public class MainUI extends UI {
         windowWrappingAddButtonDoctor = getWindowWrappingAddButton(e -> doctorLayout.addDoctor());
         UI.getCurrent().addWindow(windowWrappingAddButtonDoctor);
 
-        setRightActionOnAddButton(); // отображаем в начальный момент кнопку
-        tabs.addSelectedTabChangeListener(e -> setRightActionOnAddButton());
+        windowWrappingAddButtonPrescription = getWindowWrappingAddButton(e -> prescriptionLayout.addPrescription());
+        UI.getCurrent().addWindow(windowWrappingAddButtonPrescription);
+
+        setRightAddButton(); // отображаем в начальный момент кнопку
+        tabs.addSelectedTabChangeListener(e -> setRightAddButton());
 
     }
 
