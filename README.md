@@ -4,13 +4,11 @@
 =========
 В данном проекте реализована система ввода и отображения информации о рецептах поликлиники.
 
+[Требования к проекту](https://github.com/LinarKulinar/hospital-prescriptions/wiki)
+
 Технологии
 -------------
-•	Java SE 8
-•	Vaadin 8 
-•	JDBC
-•	HSQLDB
-•	Maven
+Java SE 8, Vaadin 8, JDBC, HSQLDB, Maven
 
 Необходимо
 -------------
