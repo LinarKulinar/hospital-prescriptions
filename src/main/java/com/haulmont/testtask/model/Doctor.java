@@ -76,14 +76,18 @@ public class Doctor {
 
     @Override
     public String toString() {
-        return "id = " + doctorId +
-                ", name = " + lastName + " "
+        return lastName + " "
                 + firstName + " "
-                + patronymic + "\t"
-                + specialization;
+                + patronymic;
     }
 
     public boolean isCanDelete() {
         return isCanDelete;
     }
+
+//    public String getfullName() {
+//        return lastName + " "
+//                + firstName + " "
+//                + patronymic;
+//    }
 }

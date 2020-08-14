@@ -80,12 +80,16 @@ public class Patient implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return "id = " + patientId +
-                ", name = " + lastName + " "
+        return lastName + " "
                 + firstName + " "
-                + patronymic + "\t"
-                + phoneNumber;
+                + patronymic;
     }
+
+//    public String getfullName() {
+//        return lastName + " "
+//                + firstName + " "
+//                + patronymic;
+//    }
 
     public boolean isCanDelete() {
         return isCanDelete;
