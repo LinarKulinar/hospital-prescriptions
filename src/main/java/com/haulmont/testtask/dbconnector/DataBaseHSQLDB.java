@@ -74,7 +74,7 @@ public class DataBaseHSQLDB extends DataBaseFactory {
      * который, используя JDBC, реализует методы необходимые для CRUD
      */
     @Override
-    public PrescriptionJdbcDAO getPrescriprionDao() {
+    public PrescriptionJdbcDAO getPrescriptionDao() {
         return new PrescriptionJdbcDAO(connection);
     }
 }

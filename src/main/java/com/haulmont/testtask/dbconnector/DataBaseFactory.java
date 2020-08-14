@@ -49,7 +49,7 @@ public abstract class DataBaseFactory {
      * Возвращаем DAO класс сущности {@link com.haulmont.testtask.model.Prescription},
      * который реализует методы необходимые для CRUD
      */
-    public abstract PrescriptionJdbcDAO getPrescriprionDao();
+    public abstract PrescriptionJdbcDAO getPrescriptionDao();
 
 
 }
