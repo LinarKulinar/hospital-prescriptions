@@ -2,12 +2,15 @@ package com.haulmont.testtask.dao;
 
 
 import com.haulmont.testtask.model.Doctor;
+import com.haulmont.testtask.model.PrescriptionPriorityType;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class DoctorJdbcDAO implements DAO<Doctor> {
@@ -127,5 +130,27 @@ public class DoctorJdbcDAO implements DAO<Doctor> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Map<PrescriptionPriorityType, Long> getStatistic(Doctor doctor) {
+        try (Statement stm = connection.createStatement();
+             ResultSet rs = stm.executeQuery("" +
+                     "select PRESCRIPTION.PRIORITY, count(PRESCRIPTION.PRIORITY)\n" +
+                     "from DOCTOR, PRESCRIPTION\n" +
+                     "where DOCTOR.DOCTOR_ID=" + doctor.getDoctorId() + " and DOCTOR.DOCTOR_ID=PRESCRIPTION.DOCTOR_ID\n" +
+                     "group by PRESCRIPTION.PRIORITY")) {
+            Map<PrescriptionPriorityType, Long> map = new HashMap<>();
+            for (PrescriptionPriorityType type : PrescriptionPriorityType.values()) { //Создаем пустую мапу
+                map.put(type, 0L);
+            }
+            while (rs.next()) { // идем построчно и инкрементируем на величину второго столбца
+                PrescriptionPriorityType currentType = PrescriptionPriorityType.valueOf(rs.getString("priority"));
+                map.put(currentType, map.get(currentType) + rs.getLong(2)); //инкрементируем
+            }
+            return map;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

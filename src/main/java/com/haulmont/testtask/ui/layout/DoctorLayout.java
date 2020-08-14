@@ -6,6 +6,7 @@ import com.haulmont.testtask.dbconnector.DataBaseType;
 import com.haulmont.testtask.model.Doctor;
 import com.haulmont.testtask.model.Prescription;
 import com.haulmont.testtask.ui.form.DoctorForm;
+import com.haulmont.testtask.ui.form.DoctorStatisticForm;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -19,6 +20,8 @@ public class DoctorLayout extends VerticalLayout {
     private Grid<Doctor> grid = new Grid<>(Doctor.class);
     //Это ссылка на форму, которая выкидывается при редактировании/удалении
     private DoctorForm doctorForm = new DoctorForm(this);
+    //Это ссылка на форму, которая выкидывается при выводе статистики
+    private DoctorStatisticForm doctorStatisticForm = new DoctorStatisticForm(this);
 
 
     /**
@@ -28,8 +31,8 @@ public class DoctorLayout extends VerticalLayout {
         Button button = new Button(VaadinIcons.BAR_CHART_H);
         button.addStyleName(ValoTheme.BUTTON_SMALL);
         button.addClickListener(e -> {
-            doctorForm.setDoctor(d); // передаем в окно доктора, с которым будем работать
-            doctorForm.showForm();
+            doctorStatisticForm.setDoctor(d); // передаем в окно доктора, с которым будем работать
+            doctorStatisticForm.showForm();
         });
         return button;
     }
