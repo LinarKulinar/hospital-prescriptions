@@ -6,6 +6,14 @@ import java.sql.Date;
  * Данный класс описывает сущность "Рецепты"
  */
 public class Prescription {
+    public final static Prescription SAMPLE_PRESCRIPTION = new Prescription(
+            "Лазолван",
+            0,
+            0,
+            Date.valueOf("2020-04-05"),
+            30,
+            PrescriptionPriorityType.Нормальный);
+
     private long prescriptionId;
     private String description;
     private long patientId;
