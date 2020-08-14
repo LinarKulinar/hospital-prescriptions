@@ -26,7 +26,7 @@ public class DataBaseHSQLDB extends DataBaseFactory {
                 Class.forName("org.hsqldb.jdbc.JDBCDriver");
                 System.out.println("HSQLDB JDBCDriver Loaded");
                 connection = DriverManager.getConnection(
-                        "jdbc:hsqldb:file:db/hospitaldb", "SA", "");
+                        "jdbc:hsqldb:file:/db/hospitaldb", "SA", "");
                 System.out.println("HSQLDB Connection Created");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
