@@ -4,6 +4,7 @@ import com.haulmont.testtask.dao.DoctorJdbcDAO;
 import com.haulmont.testtask.dao.PatientJdbcDAO;
 import com.haulmont.testtask.dao.PrescriptionJdbcDAO;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,8 +26,10 @@ public class DataBaseHSQLDB extends DataBaseFactory {
             try {
                 Class.forName("org.hsqldb.jdbc.JDBCDriver");
                 System.out.println("HSQLDB JDBCDriver Loaded");
-                connection = DriverManager.getConnection(
-                        "jdbc:hsqldb:file:/db/hospitaldb", "SA", "");
+                String projectHomeDirPath = System.getProperty("user.dir");
+                projectHomeDirPath = projectHomeDirPath.replace('\\','/');
+                String url = "jdbc:hsqldb:file:"+ projectHomeDirPath + "/db/hospitaldb";
+                connection = DriverManager.getConnection(url, "SA", "");
                 System.out.println("HSQLDB Connection Created");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
